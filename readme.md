@@ -1,0 +1,1 @@
+Training project using SQL, Python and Openfoodfact API & Database
