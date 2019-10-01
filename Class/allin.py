@@ -33,7 +33,10 @@ class Searching():
         name = self.name
         x = 1
         y = 1 #page number of JSON extracted
-        os.mkdir(f'/home/fostin/delivery/pythonorienté/projet5/Class/{name}') #make a new directory for the product
+        try:
+            os.mkdir(f'/home/fostin/delivery/pythonorienté/projet5/Class/{name}') #make a new directory for the product
+        except FileExistsError:
+            return global_dict
         print(pages)
         while x <= pages:
             url = f"https://fr-en.openfoodfacts.org/category/{name}/{x}.json"
@@ -94,40 +97,53 @@ class Listing:
                 while x != product_nb:
                     try:
                         codes = dictmp['products'][x]['code']
+                        if codes == "":
+                            codes = "UNKNOW CODE"
                         codes_list.append(codes)
                     except KeyError:
                         codes = "UNKNOW CODE"
+                        codes_list.append(codes)
                     except IndexError:
                         pass
                     try:
                         names = dictmp['products'][x]['product_name']
+                        if names == "":
+                            names = "UNKNOW NAME"
                         names_list.append(names)
                     except KeyError:
                         names = "UNKNOW NAME"
+                        names_list.append(names)
                     except IndexError:
                         pass    
                     try:
                         description = dictmp['products'][x]['categories']
+                        if description == "":
+                            description = "UNKNOW DESCRIPTION"
                         description_list.append(description)
                     except KeyError:
                         description = "UNKNOW DESCRIPTION"
+                        description_list.append(description)
                     except IndexError:
                         pass            
                     try:
                         store = dictmp['products'][x]['stores']
+                        if store == "":
+                            store = "UNKNOW NAME"
                         store_list.append(store)
                     except KeyError:
                         store = "UNKNOW STORE"
+                        store_list.append(store)
                     except IndexError:
                         pass                 
                     x = x + 1
                 x = 0
                 y = y + 1
         print(codes_list, names_list, description_list, store_list)
+        print(len(store_list))
 
 name = Input_user().entry_user()
 product_nb, product_gbl, product_dict = Searching(name).first_search()
 pages = Calc(product_nb, product_gbl).calc_pages()
-#global_dict = Searching(name).global_search(pages)
-#global_dict.update(product_dict)
+global_dict = Searching(name).global_search(pages)
+global_dict.update(product_dict)
 Listing(product_nb, pages, name).listing()
