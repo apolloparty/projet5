@@ -227,7 +227,7 @@ class Sql:
         mydb = mysql.connector.connect(
             host="localhost",
             user="testeur",
-            passwd="Hacksounet3*",
+            passwd="XXXX",
             database="test"
             )
         mycursor = mydb.cursor()
