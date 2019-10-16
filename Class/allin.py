@@ -9,69 +9,68 @@ from mysql.connector import errorcode
 class User_interface:
 
     def __init__(self):
-        self.entry = ""
-        self.entry2 = ""
+        self.category = ""
+        self.product_type = ""
 
-    def category(self):
-        entry = self.entry
-        entry2 = self.entry2
+    def chosen_cat(self):
+        category = self.category
 
-        print("\n1 = Fromages, 2 = Viandes, 3 = Poissons, 4 = Chocolats, 5 = Boissons")
-        while entry < "1" or entry > "5":
-            entry = input("Veuillez entrer le chiffre correspondant à une catégorie de produit : ")
-        if entry == "1":
-            print("\n1 = Fromages de vache, 2 = Fromages de chèvre, 3 = Fromage de bufflone")
-        elif entry =="2":
-            print("\n1 = Boeuf, 2 = Porc, 3 = Volailles")
-        elif entry == "3":
-            print("\n1 = Saumon, 2 = Thon, 3 = Sardine")
-        elif entry == "4":
-            print("\n1 = Chocolats noirs, 2 = Chocolats au lait, 3 = Chocolats blancs")
-        elif entry == "5":
-            print("\n1 = Thés glacés, 2 = Eaux, 3 = Citronnades")
-        while entry2 < "1" or entry2 > "3":
-            entry2 = input("Veuillez entrer le chiffre correspondant à un produit : ")
-        if entry == "1" and entry2 == "1":
+        print("\nBienvenue dans mon programme, veuillez faire votre choix : ")
+        print("\n1 : Fromages\n2 : Viandes\n3 : Poissons\n4 : Chocolats\n5 : Boissons\n")
+        while category < "1" or category > "5":
+            category = input("Veuillez entrer le chiffre correspondant à une catégorie de produit : ")
+        if category == "1":
+            print("\n1 : Fromages de vache\n2 : Fromages de chèvre\n3 : Fromage de bufflone\n")
+        elif category =="2":
+            print("\n1 : Boeuf\n2 : Porc\n3 : Volailles\n")
+        elif category == "3":
+            print("\n1 : Saumon\n2 : Thon\n3 : Sardine\n")
+        elif category == "4":
+            print("\n1 : Chocolats noirs\n2 : Chocolats au lait\n3 : Chocolats blancs\n")
+        elif category == "5":
+            print("\n1 : Thés glacés\n2 : Eaux\n3 : Citronnades\n")
+        return category
+        
+    def chosen_prod(self, category):
+        product_type = self.product_type
+        name = ""
+
+        while product_type < "1" or product_type > "3":
+            product_type = input("Veuillez entrer le chiffre correspondant à un produit : ")
+        if category == "1" and product_type == "1":
             name = "Fromages_de_vache"
-        elif entry == "1" and entry2 == "2":
+        elif category == "1" and product_type == "2":
             name = "Fromage_de_chèvre"
-        elif entry == "1" and entry2 == "3":
+        elif category == "1" and product_type == "3":
             name = "Fromage_au_lait_de_bufflonne"
-        elif entry =="2" and entry2 == "1":
+        elif category =="2" and product_type == "1":
             name = "Boeuf"
-        elif entry =="2" and entry2 == "2":
+        elif category =="2" and product_type == "2":
             name = "Porc"
-        elif entry =="2" and entry2 == "3":
+        elif category =="2" and product_type == "3":
             name = "Volailles"
-        elif entry =="3" and entry2 == "1":
+        elif category =="3" and product_type == "1":
             name = "Saumon"
-        elif entry =="3" and entry2 == "2":
+        elif category =="3" and product_type == "2":
             name = "Thon"
-        elif entry =="3" and entry2 == "3":
+        elif category =="3" and product_type == "3":
             name = "Sardine"
-        elif entry =="4" and entry2 == "1":
+        elif category =="4" and product_type == "1":
             name = "Chocolats_noirs"
-        elif entry =="4" and entry2 == "2":
+        elif category =="4" and product_type == "2":
             name = "Chocolats_au_lait"
-        elif entry =="4" and entry2 == "3":
+        elif category =="4" and product_type == "3":
             name = "Chocolats_blancs"
-        elif entry =="5" and entry2 == "1":
+        elif category =="5" and product_type == "1":
             name = "Thés_glacés"
-        elif entry =="5" and entry2 == "2":
+        elif category =="5" and product_type == "2":
             name = "Eaux"
-        elif entry =="5" and entry2 == "3":
+        elif category =="5" and product_type == "3":
             name = "Citronnades"
-        print(name)
-        return name
-
-class Input_user:
-
-    def __init__(self):
-        self.name = ""
-
-    def entry_user(self):
-        name = input("Entrez le nom du produit recherché : ")
-        return name
+        print(f"\nYou have chosen the product : {name}")
+        product_type = int(product_type)
+        category = int(category)
+        return name, product_type, category
 
 class Searching():
 
@@ -86,7 +85,7 @@ class Searching():
         #indent = json.dumps(product_dict, indent = 4) #permit indentation of JSON
         product_nb = int(product_dict['page_size']) #products number by pages
         product_gbl = product_dict['count'] #products number globals
-        print(product_nb, product_gbl)
+        #print(product_nb, product_gbl)
         return product_nb, product_gbl, product_dict
 
     def global_search(self, pages):
@@ -213,25 +212,33 @@ class Sql:
         self.name = name
 
     def connect(self):
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="testeur",
+            passwd="Hacksounet3*",
+            database="test"
+            )
+        mycursor = mydb.cursor()
+        return mycursor
+
+    def drop_table(self, mycursor):
+        name = self.name
+
+        restart = input("\nWrite Y, if you want to drop the table, else push enter : ")
+        if restart == "Y":
+            mycursor.execute(f"DROP TABLE {name}") #remise à zéro de la table
+        else:
+            pass
+
+    def table_creation(self, mycursor):
         names_list = self.names_list
         codes_list = self.codes_list
         description_list = self.description_list
         store_list = self.store_list
         product_show = self.product_show
         name = self.name
-
-        #print(len(store_list))
-        #product = input("Entrez le nom : ") #variable test
-        x = 0 #incrementation for product lenght
+        x = 0 #increment for product lenght
         y = 0 #increment for lists
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="testeur",
-            passwd="XXX",
-            database="test"
-            )
-        mycursor = mydb.cursor()
-
         try:
             mycursor.execute(f"CREATE TABLE {name} (id INT AUTO_INCREMENT PRIMARY KEY, nom TEXT(1000000), code TEXT(100000), description TEXT(100000), lieux TEXT(100000))")
             while x != product_show:
@@ -243,34 +250,36 @@ class Sql:
                 y = y + 1
                 mycursor.executemany(sql, val)
                 mydb.commit()
-                #print(mycursor.rowcount, "was inserted.") 
+                print(mycursor.rowcount, "was inserted.") 
         except mysql.connector.errors.ProgrammingError:
             pass
 
+    def show_product(self, mycursor):
+        name = self.name
+        product_show = self.product_show
+
         rdm_nb = randint(1, product_show)
-        print(rdm_nb)
-
-        restart = input("Write Y, if you want to drop the table, else push enter : ")
-        if restart == "Y":
-            mycursor.execute(f"DROP TABLE {name}") #remise à zéro de la table
-        else:
-            pass
-
         selected1 = ""
-        selected2 = ""
         selected1 = mycursor.execute(f"SELECT * FROM {name} WHERE id = {rdm_nb}")
         myresult = mycursor.fetchall()
-        for x in myresult:
-            print(x, "\n")
-        save = input("Would you like to see a surrogate product ? Write Y, else press enter : ")
+        for key in myresult:
+            print(key)
+        return selected1
+    
+    def alt_product(self, mycursor, selected1):
+        selected2 = ""
+        save = input("\nWould you like to see a surrogate product ? Write Y, else press enter : ")
+        rdm_nb = randint(1, product_show)
         while save == "Y" and selected1 != selected2:
             rdm_nb = randint(1, product_show)
             selected2 = mycursor.execute(f"SELECT * FROM {name} WHERE id = {rdm_nb}")
             myresult = mycursor.fetchall()
             for x in myresult:
                 print(x, "\n")
+        return selected2
 
-        save = input("Would you like to save the product in database ? Write Y, else press enter : ")
+    def save_product(self, mycursor, selected2):
+        save = input("\nWould you like to save the product in database ? Write Y, else press enter : ")
         if save == "Y":
             mycursor.execute(f"CREATE TABLE IF NOT EXISTS SAVED (id INT AUTO_INCREMENT PRIMARY KEY, nom TEXT(1000000), code TEXT(100000), description TEXT(100000), lieux TEXT(100000))")
             sql = f"INSERT INTO SAVED (nom, code, description, lieux) VALUES (%s, %s, %s, %s)"
@@ -280,11 +289,24 @@ class Sql:
 
         #print(len(store_list))
 
-name = User_interface().category()
+mydb = mysql.connector.connect(
+            host="localhost",
+            user="testeur",
+            passwd="testeur",
+            database="test"
+            )
+mycursor = mydb.cursor()
+category = User_interface().chosen_cat()
+name, product_type, category = User_interface().chosen_prod(category)
 #name = Input_user().entry_user()
 product_nb, product_gbl, product_dict = Searching(name).first_search()
 pages = Calc(product_nb, product_gbl).calc_pages()
 global_dict = Searching(name).global_search(pages)
 global_dict.update(product_dict)
 names_list, codes_list, description_list, store_list, product_show = Listing(product_nb, pages, name).listing()
-Sql(names_list, codes_list, description_list, store_list, product_show, name).connect()
+#mycursor = Sql(names_list, codes_list, description_list, store_list, product_show, name).connect()
+Sql(names_list, codes_list, description_list, store_list, product_show, name).drop_table(mycursor)
+Sql(names_list, codes_list, description_list, store_list, product_show, name).table_creation(mycursor)
+selected1 = Sql(names_list, codes_list, description_list, store_list, product_show, name).show_product(mycursor)
+selected2 = Sql(names_list, codes_list, description_list, store_list, product_show, name).alt_product(mycursor, selected1)
+Sql(names_list, codes_list, description_list, store_list, product_show, name).save_product(mycursor, selected2)
