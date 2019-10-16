@@ -211,16 +211,6 @@ class Sql:
         self.product_show = product_show
         self.name = name
 
-    def connect(self):
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="testeur",
-            passwd="Hacksounet3*",
-            database="test"
-            )
-        mycursor = mydb.cursor()
-        return mycursor
-
     def drop_table(self, mycursor):
         name = self.name
 
