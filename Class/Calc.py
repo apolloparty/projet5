@@ -14,5 +14,5 @@ class Calc:
             sys.exit()
         if pages != int(pages):
             pages = int(pages) + 1
-        print(pages)
+        #print(pages)
         return pages

@@ -18,9 +18,13 @@ class Sql:
 
     def drop_table(self, mycursor):
         """Drop the table products"""
-        mycursor.execute(f"DROP TABLE CATEGORY")
-        mycursor.execute(f"DROP TABLE PRODUCTS")
-        # remise à zéro de la table
+        reset = input("\
+\nWould you like to reset tables CATEGORY AND PRODUCTS ?\
+Press Y, else press anything else : ")
+        if reset == "Y":
+            mycursor.execute(f"DROP TABLE PRODUCTS")
+            mycursor.execute(f"DROP TABLE CATEGORY")
+            # reset CATEGORY and PRODUCTS tables
 
     def table_category(self, mycursor):
         """Create the SQL table category
@@ -97,14 +101,14 @@ class Sql:
 
         # rdm_nb = randint(1, product_show)
         mycursor.execute(f"SELECT * FROM PRODUCTS WHERE type = \
-            '{name}' ORDER BY RAND() LIMIT 10")
+        '{name}' ORDER BY RAND() LIMIT 10")
         selected1 = mycursor.fetchall()
         for row in selected1:
-            print(f"\n{row[0]} : ", row[2])
-            # print("Type", row[1])
-            # print("URL: ", row[3])
-            # print("Description: ", row[4])
-            # print("Store: ", row[5])
+            #print(f"\n{row[0]} : ", row[2])
+            print("\nName: ", row[3])
+            print("URL: ", row[4])
+            print("Description: ", row[5])
+            print("Store: ", row[6])
         return selected1
 
     def alt_product(self, mycursor, selected1):
