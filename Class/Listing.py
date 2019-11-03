@@ -12,6 +12,11 @@ class Listing:
         self.name = name
 
     def listing(self):
+        """Extract JSON from ressources path
+
+        Create four list with url, name
+        description and store of the product
+        """
         product_nb = self.product_nb
         pages = self.pages
         name = self.name
@@ -22,8 +27,7 @@ class Listing:
         description_list = []
         store_list = []
         while y <= pages:
-            path = f"/home/fostin/delivery/pythonorienté/projet5/Ressources/\
-                {name}/{name}{y}.json"
+            path = f"projet5/Ressources/{name}/{name}{y}.json"
             # print(path) #indicate which JSON is loaded
             with open(path) as js_loaded:
                 dictmp = json.load(js_loaded)
@@ -72,6 +76,6 @@ class Listing:
                 x = 0
                 y = y + 1
         product_show = len(names_list)
-        print(product_show)
+        # print(product_show)
         return names_list, codes_list, description_list, \
             store_list, product_show
